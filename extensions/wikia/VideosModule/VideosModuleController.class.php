@@ -37,8 +37,6 @@ class VideosModuleController extends WikiaController {
 		wfProfileOut( __METHOD__ );
 	}
 
-<<<<<<< Updated upstream
-=======
 	/**
 	 * Since VideosModule is using Async cache, its not practical to send a list of video titles to the offline job.
 	 * Dedup the titles here instead of in VideosModule
@@ -70,5 +68,4 @@ class VideosModuleController extends WikiaController {
 
 		$helper->sendConfirmationEmail("James test en");
 	}
->>>>>>> Stashed changes
 }
