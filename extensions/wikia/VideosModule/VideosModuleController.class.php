@@ -37,4 +37,38 @@ class VideosModuleController extends WikiaController {
 		wfProfileOut( __METHOD__ );
 	}
 
+<<<<<<< Updated upstream
+=======
+	/**
+	 * Since VideosModule is using Async cache, its not practical to send a list of video titles to the offline job.
+	 * Dedup the titles here instead of in VideosModule
+	 *
+	 * @param array $removeFromList
+	 * @param array $existingList
+	 *
+	 * @return array
+	 */
+	protected function removeDuplicates( array $removeFromList, array $existingList ) {
+		$existingTitles = [];
+		foreach ( $existingList as $videoDetail ) {
+			$existingTitles[] = $videoDetail['title'];
+		}
+
+		$resultList = [];
+		foreach ( $removeFromList as $videoDetail ) {
+			if ( array_key_exists( $videoDetail['title'], $existingTitles ) ) {
+				continue;
+			}
+			$resultList[] = $videoDetail;
+		}
+
+		return $resultList;
+	}
+
+	public function test() {
+		$helper = new UserLoginHelper();
+
+		$helper->sendConfirmationEmail("James test en");
+	}
+>>>>>>> Stashed changes
 }
