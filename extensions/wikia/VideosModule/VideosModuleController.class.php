@@ -66,6 +66,8 @@ class VideosModuleController extends WikiaController {
 	public function test() {
 		$helper = new UserLoginHelper();
 
+		$this->hello = "Hello world";
+
 		$helper->sendConfirmationEmail("James test en");
 	}
 }
