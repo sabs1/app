@@ -8,3 +8,6 @@ $wgExtensionCredits['other'][] = array(
 $dir = __DIR__ . '/';
 
 $wgAutoloadClasses['RealtimeAnonTrackingController'] = $dir . 'RealtimeAnonTrackingController.class.php';
+$wgAutoloadClasses['RealtimeAnonTrackingHooks'] = $dir . 'RealtimeAnonTrackingHooks.class.php';
+
+$wgHooks['OutputPageBeforeHTML'][] = 'RealtimeAnonTrackingHooks::onOutputPageBeforeHTML';
