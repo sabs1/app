@@ -2235,3 +2235,11 @@ $config['fbconnect_js'] = [
 		'//extensions/FBConnect/fbconnect.js',
 	]
 ];
+
+$config['realtime_anon_tracking_js'] = [
+	'type' => AssetsManager::TYPE_JS,
+	'skin' => ['oasis', 'monobook', 'venus'],
+	'assets' => [
+		'//extensions/wikia/RealtimeAnonTracking/rat.js',
+	]
+];
