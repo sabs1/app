@@ -14,14 +14,14 @@
 
 
 if ( !defined( 'MEDIAWIKI' ) ) {
-    echo "This is MediaWiki extension named Multi-Title Finder.\n";
-    exit( 1 ) ;
+	echo "This is MediaWiki extension named Multi-Title Finder.\n";
+	exit( 1 ) ;
 }
 
 $wgExtensionCredits['specialpage'][] = array(
-    "name" => "Multi-Title Finder",
-    "descriptionmsg" => "multiwikifinder-desc",
-    "author" => "Moli <moli at wikia.com>"
+	"name" => "Multi-Title Finder",
+	"descriptionmsg" => "multiwikifinder-desc",
+	"author" => "Moli <moli at wikia.com>",
 	"url" => "https://github.com/Wikia/app/tree/dev/extensions/wikia/MultiTasks"
 );
 
@@ -35,7 +35,7 @@ $wgGroupPermissions['helper']['multiwikifinder'] = true;
 $wgGroupPermissions['vstf']['multiwikifinder'] = true;
 
 if ( !function_exists( 'extAddSpecialPage' ) ) {
-    require_once ( "$IP/extensions/ExtensionFunctions.php" );
+	require_once ( "$IP/extensions/ExtensionFunctions.php" );
 }
 
 extAddSpecialPage( dirname(__FILE__) . '/SpecialMultiWikiFinder_body.php', 'Multiwikifinder', 'MultiwikifinderSpecialPage' );
