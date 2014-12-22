@@ -2236,10 +2236,26 @@ $config['fbconnect_js'] = [
 	]
 ];
 
-$config['realtime_anon_tracking_js'] = [
+$config['realtime_anon_tracking_sniffer_js'] = [
 	'type' => AssetsManager::TYPE_JS,
 	'skin' => ['oasis', 'monobook', 'venus'],
 	'assets' => [
-		'//extensions/wikia/hacks/RealtimeAnonTracking/scripts/rat.js',
+		'//extensions/wikia/hacks/RealtimeAnonTracking/scripts/ratSniffer.js',
+	]
+];
+
+$config['realtime_anon_tracking_simulator_js'] = [
+	'type' => AssetsManager::TYPE_JS,
+	'skin' => ['oasis', 'monobook', 'venus'],
+	'assets' => [
+		'//extensions/wikia/hacks/RealtimeAnonTracking/scripts/ratSimulator.js',
+	]
+];
+
+$config['realtime_anon_tracking_simulator_scss'] = [
+	'type' => AssetsManager::TYPE_SCSS,
+	'skin' => ['oasis', 'monobook', 'venus'],
+	'assets' => [
+		'//extensions/wikia/hacks/RealtimeAnonTracking/styles/rat.scss',
 	]
 ];

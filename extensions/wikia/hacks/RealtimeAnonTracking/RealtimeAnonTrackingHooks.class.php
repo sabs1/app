@@ -14,7 +14,9 @@ class RealtimeAnonTrackingHooks {
 	static public function onOutputPageBeforeHTML( OutputPage $out, &$text ) {
 		wfProfileIn(__METHOD__);
 
-		Wikia::addAssetsToOutput( 'realtime_anon_tracking_js' );
+		Wikia::addAssetsToOutput( 'realtime_anon_tracking_sniffer_js' );
+		Wikia::addAssetsToOutput( 'realtime_anon_tracking_simulator_js' );
+		Wikia::addAssetsToOutput( 'realtime_anon_tracking_simulator_scss' );
 
 		wfProfileOut(__METHOD__);
 		return true;

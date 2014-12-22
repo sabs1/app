@@ -1,16 +1,10 @@
 require([
 	'wikia.window',
 	'wikia.document',
-	'wikia.nirvana'
-], function (window, document, nirvana) {
+	'wikia.nirvana',
+	'jquery'
+], function (window, document, nirvana, $) {
 	'use strict';
-
-	console.debug('RAT reporting for duty!');
-
-	// we want to track only anons
-	if (window.wgUserName) {
-		return;
-	}
 
 	var sniffingInterval = 1000,
 		reportingInterval = 10000,
@@ -20,7 +14,16 @@ require([
 		ss = window.sessionStorage,
 		lastUrl;
 
+	$(document).ready(init);
+
 	function init() {
+		// we want to track only anons
+		if (window.wgUserName) {
+			return;
+		}
+
+		console.debug('RAT reporting for duty!');
+
 		respawnRat();
 		document.addEventListener('mousemove', sniffMousePosition);
 		sniff();
@@ -69,6 +72,4 @@ require([
 		setInterval(gatherReport, sniffingInterval);
 		setInterval(sendReport, reportingInterval);
 	}
-
-	init();
 });
