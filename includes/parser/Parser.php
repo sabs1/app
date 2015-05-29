@@ -342,6 +342,7 @@ class Parser {
 		 * to internalParse() which does all the real work.
 		 */
 
+
 		global $wgUseTidy, $wgAlwaysUseTidy, $wgDisableLangConversion, $wgDisableTitleConversion;
 		$fname = __METHOD__.'-' . wfGetCaller();
 		wfProfileIn( __METHOD__ );
@@ -352,7 +353,7 @@ class Parser {
 		// Wikia change end
 
 		$this->startParse( $title, $options, self::OT_HTML, $clearState );
-
+		var_dump("parse1:", $text);
 		$oldRevisionId = $this->mRevisionId;
 		$oldRevisionObject = $this->mRevisionObject;
 		$oldRevisionTimestamp = $this->mRevisionTimestamp;
@@ -364,10 +365,14 @@ class Parser {
 			$this->mRevisionUser = null;
 		}
 
+
 		wfRunHooks( 'ParserBeforeStrip', array( &$this, &$text, &$this->mStripState ) );
 		# No more strip!
 		wfRunHooks( 'ParserAfterStrip', array( &$this, &$text, &$this->mStripState ) );
+
 		$text = $this->internalParse( $text );
+		var_dump("parse2:", $text);
+
 
 		$text = $this->mStripState->unstripGeneral( $text );
 
@@ -1179,6 +1184,7 @@ class Parser {
 	 */
 	function internalParse( $text, $isMain = true, $frame = false ) {
 		wfProfileIn( __METHOD__ );
+		var_dump("internalParse1");
 
 		$origText = $text;
 
@@ -1187,6 +1193,7 @@ class Parser {
 			wfProfileOut( __METHOD__ );
 			return $text ;
 		}
+		var_dump("internalParse2");
 
 		# if $frame is provided, then use $frame for replacing any variables
 		if ( $frame ) {
@@ -1207,24 +1214,31 @@ class Parser {
 		$text = Sanitizer::removeHTMLtags( $text, array( &$this, 'attributeStripCallback' ), false, array_keys( $this->mTransparentTagHooks ) );
 		wfRunHooks( 'InternalParseBeforeLinks', array( &$this, &$text, &$this->mStripState ) );
 
+
 		# Tables need to come after variable replacement for things to work
 		# properly; putting them before other transformations should keep
 		# exciting things like link expansions from showing up in surprising
 		# places.
 		$text = $this->doTableStuff( $text );
 
+
 		$text = preg_replace( '/(^|\n)-----*/', '\\1<hr />', $text );
 
 		$text = $this->doDoubleUnderscore( $text );
+		var_dump("internalParse3".$text);
 
 		$text = $this->doHeadings( $text );
 		if ( $this->mOptions->getUseDynamicDates() ) {
 			$df = DateFormatter::getInstance();
 			$text = $df->reformat( $this->mOptions->getDateFormat(), $text );
 		}
+		var_dump("internalParse3.1".$text);
 		$text = $this->replaceInternalLinks( $text );
+		var_dump("internalParse3.2".$text);
 		$text = $this->doAllQuotes( $text );
+		var_dump("internalParse3.3".$text);
 		$text = $this->replaceExternalLinks( $text );
+		var_dump("internalParse3.4".$text);
 
 		# replaceInternalLinks may sometimes leave behind
 		# absolute URLs, which have to be masked to hide them from replaceExternalLinks
@@ -1234,6 +1248,7 @@ class Parser {
 		$text = $this->formatHeadings( $text, $origText, $isMain );
 
 		wfProfileOut( __METHOD__ );
+		var_dump("internalParse4". $text);
 		return $text;
 	}
 
@@ -1819,7 +1834,10 @@ class Parser {
 	 * @private
 	 */
 	function replaceInternalLinks( $s ) {
-		$this->mLinkHolders->merge( $this->replaceInternalLinks2( $s ) );
+		$d = $this->replaceInternalLinks2( $s );
+		//var_dump("this->mLinkHolders", $d);
+		$this->mLinkHolders->merge( $d );
+
 		return $s;
 	}
 
@@ -1831,6 +1849,7 @@ class Parser {
 	 */
 	function replaceInternalLinks2( &$s ) {
 		wfProfileIn( __METHOD__ );
+		var_dump("replaceInternalLinks2:".$s);
 
 		# RTE (Rich Text Editor) - begin
 		# @author: Inez Korczyński
@@ -1849,14 +1868,18 @@ class Parser {
 		}
 
 		$holders = new LinkHolderArray( $this );
+		var_dump("replaceInternalLinks2 1868: ".$s);
+		//var_dump("holders:". $holders);
 
 		# split the entire text string on occurences of [[
 		$a = StringUtils::explode( '[[', ' ' . $s );
 		# get the first element (all text up to first [[), and remove the space we added
 		$s = $a->current();
+		var_dump("replaceInternalLinks2 1873: ".$s);
 		$a->next();
 		$line = $a->current(); # Workaround for broken ArrayIterator::next() that returns "void"
 		$s = substr( $s, 1 );
+		var_dump("replaceInternalLinks2 1876:".$s);
 
 		$useLinkPrefixExtension = $this->getTargetLanguage()->linkPrefixExtension();
 		$e2 = null;
@@ -1895,6 +1918,7 @@ class Parser {
 
 		# Loop for each link
 		for ( ; $line !== false && $line !== null ; $a->next(), $line = $a->current() ) {
+			var_dump("iteruje:". $line);
 			# Check for excessive memory usage
 			if ( $holders->isBig() ) {
 				# Too big
@@ -1975,6 +1999,7 @@ class Parser {
 				wfProfileOut( __METHOD__."-e1" );
 				continue;
 			}
+			var_dump("replaceInternalLinks2 1995:".$s);
 			wfProfileOut( __METHOD__."-e1" );
 			wfProfileIn( __METHOD__."-misc" );
 
@@ -1999,6 +2024,7 @@ class Parser {
 				# Strip off leading ':'
 				$link = substr( $link, 1 );
 			}
+			var_dump("iteruje 2027:". $line);
 
 			wfProfileOut( __METHOD__."-misc" );
 			wfProfileIn( __METHOD__."-title" );
@@ -2128,6 +2154,9 @@ class Parser {
 					wfProfileOut( __METHOD__."-image" );
 					continue;
 				}
+				var_dump("iteruje 2157 line:". $line);
+				var_dump("iteruje 2157 s:". $s);
+				var_dump("iteruje 2157 ns:". $ns);
 
 				if ( $ns == NS_CATEGORY ) {
 					wfProfileIn( __METHOD__."-category" );
@@ -2140,6 +2169,7 @@ class Parser {
 						$s .= $prefix . RTEMarker::generate(RTEMarker::PLACEHOLDER, $dataIdx) . $trail;
 					}
 					else {
+						var_dump("2173");
 						$s = rtrim( $s . "\n" ); # bug 87
 
 						if ( $wasblank ) {
@@ -2156,12 +2186,13 @@ class Parser {
 						 * @todo We might want to use trim($tmp, "\n") here.
 						 */
 						$s .= trim( $prefix . $trail, "\n" ) == '' ? '' : $prefix . $trail;
+						var_dump("2189: ". $s);
 					}
-
+					var_dump("2191");
 					wfProfileOut( __METHOD__."-category" );
 					continue;
 				}
-
+				var_dump("2193");
 				# Wikia change begin
 				# @author macbre
 				$hookRet = wfRunHooks('ParserReplaceInternalLinks2NoForce', array(&$s, $nt, $prefix, $trail, isset($RTE_wikitextIdx) ? $RTE_wikitextIdx : null));
@@ -2170,6 +2201,7 @@ class Parser {
 				}
 				# Wikia change end
 			}
+			var_dump("2202");
 
 			# RTE (Rich Text Editor) - begin
 			# @author: Inez Korczyński
@@ -2182,6 +2214,7 @@ class Parser {
 				}
 			}
 			# RTE - end
+			var_dump("2214");
 
 			# NS_MEDIA is a pseudo-namespace for linking directly to a file
 			# @todo FIXME: Should do batch file existence checks, see comment below
@@ -2234,6 +2267,7 @@ class Parser {
 				$this->mOutput->addLink( $nt );
 				$s .= $this->makeKnownLinkHolder( $nt, $text, array(), $trail, $prefix );
 			} else {
+				var_dump("2270");
 				# Links will be added to the output link list after checking
 				$s .= $holders->makeHolder( $nt, $text, array(), $trail, $prefix );
 			}
@@ -3257,6 +3291,7 @@ class Parser {
 	 */
 	function replaceVariables( $text, $frame = false, $argsOnly = false ) {
 		# Is there any text? Also, Prevent too big inclusions!
+		var_dump("replaceVariables");
 		if ( strlen( $text ) < 1 || strlen( $text ) > $this->mOptions->getMaxIncludeSize() ) {
 			return $text;
 		}
@@ -5194,6 +5229,7 @@ class Parser {
 	 * @return array of link CSS classes, indexed by PDBK.
 	 */
 	function replaceLinkHolders( &$text, $options = 0 ) {
+		var_dump("replaceLinkHolders: ", $text);
 		return $this->mLinkHolders->replace( $text );
 	}
 
@@ -5205,6 +5241,7 @@ class Parser {
 	 * @return String
 	 */
 	function replaceLinkHoldersText( $text ) {
+		var_dump("replaceLinkHoldersText");
 		return $this->mLinkHolders->replaceText( $text );
 	}
 

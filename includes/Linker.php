@@ -429,6 +429,7 @@ class Linker {
 	 * @return string
 	 */
 	public static function makeSelfLinkObj( $nt, $html = '', $query = '', $trail = '', $prefix = '' ) {
+		var_dump("makeSelfLinkObj");
 		if ( $html == '' ) {
 			$html = htmlspecialchars( $nt->getPrefixedText() );
 		}

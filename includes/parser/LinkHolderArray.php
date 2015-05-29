@@ -195,6 +195,7 @@ class LinkHolderArray {
 	 * @param $nt Title
 	 */
 	function makeHolder( $nt, $text = '', $query = array(), $trail = '', $prefix = ''  ) {
+		var_dump("makeHolder");
 		wfProfileIn( __METHOD__ );
 		if ( ! is_object($nt) ) {
 			# Fail gracefully
@@ -240,6 +241,7 @@ class LinkHolderArray {
 
 		$colours = $this->replaceInternal( $text );
 		$this->replaceInterwiki( $text );
+		var_dump("colours:", $colours);
 
 		wfProfileOut( __METHOD__ );
 		return $colours;

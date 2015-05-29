@@ -18,6 +18,7 @@ class MediaWikiParserService implements ExternalParser {
 	 * @return mixed
 	 */
 	public function parse( $wikitext ) {
+		var_dump($wikitext);
 		wfProfileIn( __METHOD__ );
 		if ( substr( $wikitext, 0, 1 ) == "*" ) {
 			//fix for first item list elements
@@ -26,6 +27,8 @@ class MediaWikiParserService implements ExternalParser {
 		$parsedText = $this->getParserInstance()
 			->parse( $wikitext, $this->getParserTitle(), $this->getParserOptions(), false )
 			->getText();
+		//var_dump($parsedText);
+		var_dump('****************************************************************');
 		wfProfileOut( __METHOD__ );
 		return $parsedText;
 	}
@@ -36,6 +39,8 @@ class MediaWikiParserService implements ExternalParser {
 	 * @return string HTML outcome
 	 */
 	public function parseRecursive( $wikitext ) {
+		var_dump("parseRecursive");
+
 		wfProfileIn( __METHOD__ );
 		$withVars = $this->parser->replaceVariables( $wikitext, $this->frame );
 		$parsed = $this->parse( $withVars );

@@ -54,6 +54,7 @@ class XmlParser {
 	 */
 	public function getDataFromXmlString( $xmlString ) {
 		wfProfileIn( __METHOD__ );
+		var_dump("getDataFromXmlString");
 
 		$global_libxml_setting = libxml_use_internal_errors();
 		libxml_use_internal_errors( true );
@@ -88,6 +89,7 @@ class XmlParser {
 	 */
 	public function getNode( \SimpleXMLElement $xmlNode, $parent = null ) {
 		wfProfileIn(__METHOD__);
+		var_dump("getNode");
 		$tagType = $xmlNode->getName();
 		$className = 'Wikia\\PortableInfobox\\Parser\\Nodes\\' . 'Node' . ucfirst( strtolower( $tagType ) );
 		if ( class_exists( $className ) ) {

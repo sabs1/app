@@ -68,6 +68,8 @@ class Node {
 	}
 
 	public function getData() {
+		//wfRunHooks( 'PortableInfoboxNodeImage::getData', [ $title, &$ref, $alt ] );
+		var_dump("getData z noda: ". (string)$this->xmlNode);
 		return [ 'value' => (string)$this->xmlNode ];
 	}
 

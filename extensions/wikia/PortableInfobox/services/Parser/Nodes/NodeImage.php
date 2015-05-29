@@ -14,6 +14,7 @@ class NodeImage extends Node {
 		$caption = $this->getValueWithDefault( $this->xmlNode->{self::CAPTION_TAG_NAME} );
 
 		wfRunHooks( 'PortableInfoboxNodeImage::getData', [ $title, &$ref, $alt ] );
+		var_dump("image: ", $ref);
 
 		return [
 			'url' => $this->resolveImageUrl( $title ),

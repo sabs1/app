@@ -226,7 +226,7 @@ class ParserOutput extends CacheTime {
 	function setTOCHTML( $tochtml )      { return wfSetVar( $this->mTOCHTML, $tochtml ); }
 	function setTimestamp( $timestamp )  { return wfSetVar( $this->mTimestamp, $timestamp ); }
 
-	function addCategory( $c, $sort )    { $this->mCategories[$c] = $sort; }
+	function addCategory( $c, $sort )    { var_dump("addCategory: ", $sort); $this->mCategories[$c] = $sort; }
 	function addLanguageLink( $t )       { $this->mLanguageLinks[] = $t; }
 	function addWarning( $s )            { $this->mWarnings[$s] = 1; }
 
