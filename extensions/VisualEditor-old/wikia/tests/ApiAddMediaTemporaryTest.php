@@ -6,6 +6,9 @@ class ApiAddMediaTemporaryTest extends WikiaBaseTest {
 
 	/* Tests */
 
+	/**
+	 * @group BrokenInHHVM
+	 */
 	public function testImageDuplicate() {
 		$request = new FauxRequest( array(), true );
 
@@ -55,6 +58,9 @@ class ApiAddMediaTemporaryTest extends WikiaBaseTest {
 		$api->execute();
 	}
 
+	/**
+	 * @group BrokenInHHVM
+	 */
 	public function testImageNewLoggedIn() {
 		$request = new FauxRequest( array(), true );
 
