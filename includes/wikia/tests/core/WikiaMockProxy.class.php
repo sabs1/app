@@ -31,6 +31,8 @@ class WikiaMockProxy {
 	 */
 	public static $instance;
 
+	public static $patches = [];
+
 	protected $enabled = false;
 
 	protected $mocks = array();
@@ -156,15 +158,23 @@ class WikiaMockProxy {
 			case self::DYNAMIC_METHOD:
 				$className = $parts[1];
 				$methodName = $parts[2];
-				$savedName = self::SAVED_PREFIX . $methodName;
+				$methodString = "{$className}::{$methodName}";
 				if ( $state ) { // enable
-					is_callable( "{$className}::{$methodName}" );
-					$flags = RUNKIT_ACC_PUBLIC | ( $type == self::STATIC_METHOD ? RUNKIT_ACC_STATIC : 0);
-					runkit_method_rename( $className, $methodName, $savedName);  // save the original method
-					runkit_method_add($className, $methodName, '', $this->getExecuteCallCode($type,$id, $type === self::DYNAMIC_METHOD), $flags );
-				} else { // diable
-					runkit_method_remove($className, $methodName);  // remove the redefined instance
-					runkit_method_rename($className, $savedName, $methodName); // restore the original
+					is_callable( $methodString );
+					self::$patches[$methodString] = Patchwork\replace( $methodString, function () use ( $type, $id ) {
+						$arguments = func_get_args();
+						$context = null;
+
+						if ( $type === WikiaMockProxy::DYNAMIC_METHOD ) {
+							$context = $this;
+						}
+
+						return WikiaMockProxy::$instance->execute( $type, $id, $arguments, $context );
+					} );
+				} else { // disable
+					if ( isset( self::$patches[$methodString] ) ) {
+						Patchwork\undo( self::$patches[$methodString] );
+					}
 				}
 				break;
 			case self::GLOBAL_FUNCTION:
@@ -173,13 +183,15 @@ class WikiaMockProxy {
 				$functionName = $namespace . $baseName;
 				$savedName = $namespace . self::SAVED_PREFIX . $baseName;
 				if ( $state ) { // enable
-					$tempName = "WikiaMockProxyTempFuncName"; // workaround for namespaces functions
-					runkit_function_rename($functionName, $savedName);
-					runkit_function_add($tempName, '', $this->getExecuteCallCode($type,$id));
-					runkit_function_rename($tempName,$functionName);
+					self::$patches[$functionName] = Patchwork\replace( $functionName, function () use ( $type, $id ) {
+						$arguments = func_get_args();
+
+						return WikiaMockProxy::$instance->execute( $type, $id, $arguments );
+					} );
 				} else { // disable
-					runkit_function_remove($functionName);  // remove the redefined instance
-					runkit_function_rename($savedName, $functionName); // restore the original
+					if ( isset( self::$patches[$functionName] ) ) {
+						Patchwork\undo( self::$patches[$functionName] );
+					}
 				}
 				break;
 		}

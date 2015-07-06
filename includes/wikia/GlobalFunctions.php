@@ -1613,3 +1613,12 @@ function wfGetUniqueArrayCI( array $arr ) {
 	$unique = array_intersect_key( $arr, array_unique( $lower ) );
 	return array_filter( $unique );
 }
+
+/**
+ * Check if we are running under HHVM
+ *
+ * @return bool
+ */
+function wfIsHHVM() {
+	return defined( 'HHVM_VERSION' );
+}
