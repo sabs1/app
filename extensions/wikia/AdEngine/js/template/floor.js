@@ -5,7 +5,7 @@ define('ext.wikia.adEngine.template.floor', [
 	'wikia.document',
 	'wikia.iframeWriter',
 	'wikia.window'
-], function (adContext, log, doc, iframeWriter, win) {
+], function (adContext, log, doc, iframeWriter, win, adDetect) {
 	'use strict';
 
 	var logGroup = 'ext.wikia.adEngine.template.floor',
@@ -64,6 +64,25 @@ define('ext.wikia.adEngine.template.floor', [
 				$('html', iframeDoc).css('cursor', 'pointer').on('click', params.onClick);
 			});
 		}
+
+		var gptEventMock = {
+			size: {
+				width: params.width,
+				height: params.height
+			}
+		};
+
+		if (params.expectHop) {
+			$(iframe).on('load', function () {
+				adDetect.onLoad('INVISIBLE_HIGH_IMPACT', gptEventMock, iframe, function () {
+					$footer.removeClass('hidden');
+				}, function () {
+					return;
+				});
+			});
+		}
+
+		$footer.addClass('hidden');
 
 		$(doc.body).append($footer);
 	}
